@@ -1,40 +1,248 @@
-<!doctype html>
-<html lang="tl">
+<!DOCTYPE html>
+<html lang="fil">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Isang Tanong Para Sa’yo 💖</title>
-  <style>
-    :root{
-      --bg1:#0b1020;
-      --bg2:#1a0b2e;
-      --glass: rgba(255,255,255,.08);
-      --glass2: rgba(255,255,255,.12);
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.72);
-      --accent:#ff5ac8;
-      --accent2:#7c5cff;
-      --good:#2cffc5;
-      --warn:#ffd24a;
-      --shadow: 0 20px 60px rgba(0,0,0,.45);
-      --radius: 22px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para Kay Lourty</title>
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:
-        radial-gradient(1200px 800px at 15% 10%, rgba(124,92,255,.35), transparent 60%),
-        radial-gradient(1100px 900px at 85% 20%, rgba(255,90,200,.28), transparent 55%),
-        radial-gradient(900px 700px at 50% 95%, rgba(44,255,197,.18), transparent 55%),
-        linear-gradient(160deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
-    }
+<style>
+:root{
+  --bg1:#0f0c29;
+  --bg2:#302b63;
+  --bg3:#24243e;
+  --glass: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --text: rgba(255,255,255,0.92);
+  --soft: rgba(255,255,255,0.75);
+  --accent:#ff5fa2;
+}
 
-    /* floating hearts */
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.card{
+  max-width:900px;
+  width:100%;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:24px;
+  backdrop-filter: blur(12px);
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+  padding:32px;
+  position:relative;
+}
+
+h1{
+  font-size:clamp(28px,4vw,44px);
+  margin:0 0 12px;
+  letter-spacing:-0.5px;
+}
+
+.subtitle{
+  font-size:16px;
+  color:var(--soft);
+  margin-bottom:26px;
+}
+
+.text{
+  font-size:16px;
+  line-height:1.8;
+  color:var(--soft);
+}
+
+.text strong{
+  color:#fff;
+}
+
+.highlight{
+  color:var(--accent);
+  font-weight:700;
+}
+
+.question{
+  margin-top:30px;
+  font-size:20px;
+  font-weight:700;
+  color:#fff;
+}
+
+.buttons{
+  margin-top:22px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+button{
+  border:none;
+  border-radius:16px;
+  padding:14px 18px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+
+.yes{
+  background:linear-gradient(135deg,#ff7eb3,#ff758c);
+  color:#1a0d14;
+}
+
+.yes2{
+  background:linear-gradient(135deg,#ffd194,#ffb347);
+  color:#2a1a00;
+}
+
+.force{
+  background:linear-gradient(135deg,#b983ff,#7f7cff);
+  color:#0d0830;
+}
+
+footer{
+  margin-top:28px;
+  font-size:13px;
+  color:var(--soft);
+  text-align:right;
+}
+
+/* modal */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-box{
+  background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(0,0,0,.25));
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:28px;
+  max-width:500px;
+  width:100%;
+  backdrop-filter: blur(12px);
+}
+
+.modal-box h2{
+  margin-top:0;
+  font-size:26px;
+}
+
+.modal-box p{
+  line-height:1.7;
+  color:var(--soft);
+}
+
+.close{
+  margin-top:16px;
+  background:linear-gradient(135deg,#2cffc5,#6effa8);
+  color:#042017;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Lourty</h1>
+  <div class="subtitle">May gusto akong sabihin sa’yo, at gusto kong marinig mo ito nang malinaw.</div>
+
+  <div class="text">
+    Lourty,  
+    <br><br>
+    Hindi ko alam kung paano eksaktong ipaliwanag, pero simula nung dumating ka sa buhay ko,
+    may mga araw na mas naging magaan, mas naging malinaw, at mas naging totoo.
+    Hindi dahil naging perpekto ang lahat — kundi dahil <strong>ikaw</strong> ang kasama ko sa isip.
+    <br><br>
+    Gusto kitang piliin hindi lang kapag masaya ang mundo,
+    kundi pati kapag tahimik, magulo, o mahirap.
+    Gusto kong maging taong pwede mong sandalan,
+    taong makikinig, at taong mananatili.
+    <br><br>
+    Hindi kita hinahabol dahil sa panandaliang kilig,
+    kundi dahil naniniwala akong may halaga ang <span class="highlight">tayo</span>
+    kung bibigyan natin ng pagkakataon.
+  </div>
+
+  <div class="question">
+    Lourty, gusto mo bang maging girlfriend ko?
+  </div>
+
+  <div class="buttons">
+    <button class="yes" onclick="openModal(1)">Oo, gusto ko 💖</button>
+    <button class="yes2" onclick="openModal(2)">Oo… pag-iisipan pero oo 🤍</button>
+    <button class="force" onclick="openModal(3)">Walang ibang sagot, oo 😌</button>
+  </div>
+
+  <footer>
+    — mula sa taong pumipili sa’yo araw-araw
+  </footer>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <button class="close" onclick="closeModal()">Ngumiti ka muna 😊</button>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById("modal");
+const title = document.getElementById("modalTitle");
+const text  = document.getElementById("modalText");
+
+function openModal(type){
+  const messages = {
+    1:{
+      t:"Masaya ang puso ko 💖",
+      p:"Salamat, Lourty. Hindi mo alam kung gaano ito kahalaga sa akin. Pangako ko, rerespetuhin kita at pipiliin kita araw-araw."
+    },
+    2:{
+      t:"Kahit dahan-dahan 🤍",
+      p:"Okay lang. Ang mahalaga, pareho nating binibigyan ng pagkakataon ang nararamdaman natin. Nandito lang ako."
+    },
+    3:{
+      t:"Ngumiti ka na 😌",
+      p:"Joke man o hindi, seryoso ako. Ikaw ang gusto kong piliin, at gusto kong subukan kung saan tayo dadalhin nito."
+    }
+  };
+
+  title.textContent = messages[type].t;
+  text.textContent  = messages[type].p;
+  modal.classList.add("active");
+}
+
+function closeModal(){
+  modal.classList.remove("active");
+}
+</script>
+
+</body>
+</html>    /* floating hearts */
     .hearts{
       position:fixed; inset:0;
       pointer-events:none;
