@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title></title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  min-height:100vh;
+  background: radial-gradient(ellipse at center,#2d0a1a 0%,#1a0510 60%,#0d0208 100%);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  font-family:'Dancing Script',cursive,Georgia,serif;
+  overflow:hidden; user-select:none;
+}
+
+.hint {
+  color:rgba(255,182,193,.85);
+  font-size:1.2rem; margin-bottom:35px;
+  letter-spacing:3px;
+  text-shadow:0 0 25px rgba(255,80,120,.6);
+  animation:pulse 2s ease-in-out infinite;
+  z-index:10; position:relative; transition:all .6s;
+}
+@keyframes pulse{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+
+.scene { perspective:900px; position:relative; z-index:10; }
+
+/* overflow:visible  kat zarfn dna taabilsin */
+.envelope {
+  position:relative;
+  width:300px; height:200px;
+  cursor:pointer;
+  transition:transform .3s;
+  overflow:visible;
+}
+.envelope:hover{ transform:scale(1.03); }
+
+.envelope::before {
+  content:''; position:absolute; inset:-8px; border-radius:12px;
+  box-shadow:0 0 35px 10px rgba(255,80,130,.25);
+  animation:glow 2s ease-in-out infinite; pointer-events:none;
+}
+@keyframes glow{0%,100%{box-shadow:0 0 30px 8px rgba(255,80,130,.2)}50%{box-shadow:0 0 55px 20px rgba(255,80,130,.45)}}
+
+.env-svg {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  z-index:6;
+  filter:drop-shadow(0 15px 40px rgba(0,0,0,.7));
+}
+
+/* LETTER � z-index y�ksek, flap(15) �st�nde */
+.letter {
+  position:absolute;
+  width:82%; left:9%;
+  bottom:10px;
+  z-index:25;
+  transform-origin:bottom center;
+  transform:scaleY(0.05);
+  opacity:0;
+  pointer-events:none;
+  border-radius:4px;
+  overflow:hidden;
+  box-shadow:0 -12px 40px rgba(0,0,0,.55), 0 4px 12px rgba(0,0,0,.3);
+}
+.letter-inner {
+  background:
+    repeating-linear-gradient(transparent,transparent 23px,rgba(140,175,220,.4) 23px,rgba(140,175,220,.4) 24.5px),
+    linear-gradient(180deg,#fefaf2,#faf5e5);
+  padding:15px 14px 14px 30px;
+  min-height:185px; position:relative;
+}
+.letter-inner::before {
+  content:''; position:absolute;
+  left:22px; top:0; bottom:0; width:1.5px;
+  background:rgba(220,100,110,.5);
+}
+.letter-text {
+  font-family:'Dancing Script',cursive,Georgia,serif;
+  font-size:1rem; color:#2a1010; line-height:2;
+  opacity:0; transition:opacity .8s ease;
+}
+.letter-text .greeting{font-size:1.15rem;color:#7a1820;font-weight:700;display:block;margin-bottom:4px}
+.letter-text .sig{display:block;text-align:right;color:#7a1820;font-style:italic;margin-top:8px}
+.letter-text .bigheart{display:block;text-align:center;font-size:1.9rem;margin-top:4px;animation:hb 1.2s ease-in-out infinite}
+@keyframes hb{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+
+/* FLAP � z-index:15, kat(25) altnda kalr */
+.flap {
+  position:absolute; top:0; left:0;
+  width:100%; height:53%;
+  z-index:15;
+  transform-origin:top center;
+  transform-style:preserve-3d;
+}
+.flap-front,.flap-back {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  backface-visibility:hidden;
+}
+.flap-front svg,.flap-back svg{width:100%;height:100%}
+.flap-back{transform:rotateX(180deg)}
+
+.seal {
+  position:absolute; bottom:52px; left:50%;
+  transform:translateX(-50%);
+  z-index:20; font-size:2rem;
+  filter:drop-shadow(0 3px 10px rgba(220,30,70,.7));
+  animation:sealpulse 1.4s ease-in-out infinite;
+  transition:transform .4s,opacity .3s;
+}
+@keyframes sealpulse{0%,100%{transform:translateX(-50%) scale(1)}40%{transform:translateX(-50%) scale(1.2)}70%{transform:translateX(-50%) scale(.92)}}
+
+.sparkle{position:fixed;pointer-events:none;font-size:1.4rem;z-index:200;animation:spk 1.3s ease-out forwards}
+@keyframes spk{0%{opacity:1;transform:translate(0,0) scale(.4) rotate(0deg)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(1.1) rotate(360deg)}}
+
+.ptcl{position:fixed;pointer-events:none;z-index:1;animation:fup linear infinite;opacity:0}
+@keyframes fup{0%{transform:translateY(0) rotate(0deg);opacity:0}10%{opacity:.7}90%{opacity:.3}100%{transform:translateY(-110vh) rotate(720deg);opacity:0}}
+
+/* A�ILMA ANMASYONLARI */
+.opening .flap{animation:flapOpen 1.1s cubic-bezier(.25,.46,.45,.94) .1s forwards}
+@keyframes flapOpen{0%{transform:rotateX(0deg)}100%{transform:rotateX(-200deg)}}
+
+/* Kat: flap a�ldktan sonra (delay:1.1s) �kyor, zarfn �st�ne tayor */
+.opening .letter{
+  animation:letterRise 1.5s cubic-bezier(.25,.46,.45,.94) 1.1s forwards;
+  pointer-events:auto;
+}
+@keyframes letterRise{
+  0%  {transform:scaleY(.06); opacity:0}
+  18% {opacity:1; transform:scaleY(.4)}
+  68% {transform:scaleY(1) translateY(-120px); opacity:1}
+  82% {transform:scaleY(1) translateY(-132px)}
+  100%{transform:scaleY(1) translateY(-124px); opacity:1}
+}
+
+.opening .seal{animation:sealPop .35s ease-in .05s forwards}
+@keyframes sealPop{to{transform:translateX(-50%) scale(0) rotate(45deg);opacity:0}}
+
+@media(max-width:380px){
+  .envelope{width:270px;height:180px}
+  .seal{font-size:1.7rem;bottom:44px}
+  .letter-text{font-size:.9rem}
+}
+</style>
+</head>
+<body>
+
+<div class="hint" id="hint">S ❤️  dokun...</div>
+
+<div class="scene">
+  <div class="envelope" id="env" onclick="openIt()">
+
+    <!-- LETTER (z-index:25  flap �st�nde g�r�n�r) -->
+    <div class="letter" id="letter">
+      <div class="letter-inner">
+        <div class="letter-text" id="ltxt">
+          <span class="greeting">Sevgilim,</span>
+          Özür dilerim...<br>
+          bo yer öyle dediğim için.<br><br>
+          Affet beni, olur mu? <br><br>
+          Seni seviyorum...
+          <span class="bigheart"></span>
+          <span class="sig">❤️ Hep seninle </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENVELOPE SVG -->
+    <svg class="env-svg" viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#f2dfc8"/>
+          <stop offset="50%" stop-color="#e8ccaa"/>
+          <stop offset="100%" stop-color="#eedac0"/>
+        </linearGradient>
+        <linearGradient id="lf" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ddb888"/>
+          <stop offset="100%" stop-color="#cca870"/>
+        </linearGradient>
+        <linearGradient id="rf" x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0%" stop-color="#ddb888"/>
+          <stop offset="100%" stop-color="#cca870"/>
+        </linearGradient>
+        <linearGradient id="ins" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#cc8888"/>
+          <stop offset="100%" stop-color="#b06868"/>
+        </linearGradient>
+      </defs>
+      <rect width="300" height="200" rx="5" fill="url(#bg)"/>
+      <polygon points="0,200 150,95 300,200" fill="url(#ins)" opacity=".95"/>
+      <polygon points="0,0 0,200 150,100" fill="url(#lf)" opacity=".9"/>
+      <polygon points="0,0 0,200 150,100" fill="rgba(0,0,0,0.06)"/>
+      <polygon points="300,0 300,200 150,100" fill="url(#rf)" opacity=".9"/>
+      <polygon points="300,0 300,200 150,100" fill="rgba(0,0,0,0.06)"/>
+      <line x1="0" y1="0" x2="150" y2="100" stroke="rgba(150,110,70,.22)" stroke-width="1"/>
+      <line x1="300" y1="0" x2="150" y2="100" stroke="rgba(150,110,70,.22)" stroke-width="1"/>
+      <line x1="12" y1="50"  x2="288" y2="50"  stroke="rgba(170,140,110,.12)" stroke-width=".8"/>
+      <line x1="12" y1="80"  x2="288" y2="80"  stroke="rgba(170,140,110,.12)" stroke-width=".8"/>
+      <line x1="12" y1="110" x2="288" y2="110" stroke="rgba(170,140,110,.12)" stroke-width=".8"/>
+      <line x1="12" y1="140" x2="288" y2="140" stroke="rgba(170,140,110,.12)" stroke-width=".8"/>
+      <line x1="12" y1="170" x2="288" y2="170" stroke="rgba(170,140,110,.12)" stroke-width=".8"/>
+    </svg>
+
+    <!-- TOP FLAP (z-index:15) -->
+    <div class="flap" id="flap">
+      <div class="flap-front">
+        <svg viewBox="0 0 300 106" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#eed0a0"/>
+              <stop offset="70%" stop-color="#e0bc88"/>
+              <stop offset="100%" stop-color="#d4ae78"/>
+            </linearGradient>
+            <linearGradient id="fshine" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="rgba(255,255,255,.28)"/>
+              <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+            </linearGradient>
+          </defs>
+          <polygon points="0,0 300,0 150,106" fill="url(#fg)"/>
+          <polygon points="0,0 300,0 150,106" fill="url(#fshine)"/>
+          <line x1="0" y1="0" x2="150" y2="106" stroke="rgba(150,110,60,.2)" stroke-width="1"/>
+          <line x1="300" y1="0" x2="150" y2="106" stroke="rgba(150,110,60,.2)" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="flap-back">
+        <svg viewBox="0 0 300 106" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="dp" patternUnits="userSpaceOnUse" width="14" height="14">
+              <line x1="0" y1="14" x2="14" y2="0" stroke="#b07878" stroke-width="2.5" opacity=".55"/>
+            </pattern>
+          </defs>
+          <polygon points="0,0 300,0 150,106" fill="#d09898"/>
+          <polygon points="0,0 300,0 150,106" fill="url(#dp)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- SEAL -->
+    <div class="seal" id="seal"></div>
+
+  </div>
+</div>
+
+<div id="ptcls"></div>
+
+<script>
+const emojis=['','','','','','','',''];
+const pc=document.getElementById('ptcls');
+for(let i=0;i<20;i++){
+  const d=document.createElement('div');
+  d.className='ptcl';
+  d.textContent=emojis[i%emojis.length];
+  d.style.cssText=`left:${(i*5.3)%100}%;bottom:-40px;font-size:${0.8+(i%3)*0.4}rem;animation-duration:${7+(i%5)*2.5}s;animation-delay:${(i*0.9)%9}s`;
+  pc.appendChild(d);
+}
+
+let done=false;
+function openIt(){
+  if(done)return; done=true;
+  const cx=window.innerWidth/2, cy=window.innerHeight/2;
+  for(let i=0;i<16;i++){
+    const a=(i/16)*Math.PI*2, dist=90+Math.random()*100;
+    const s=document.createElement('div');
+    s.className='sparkle';
+    s.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    s.style.cssText=`left:${cx}px;top:${cy}px;animation-delay:${Math.random()*.3}s;font-size:${1+Math.random()*.8}rem;--tx:${Math.cos(a)*dist}px;--ty:${Math.sin(a)*dist}px`;
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),1800);
+  }
+  document.getElementById('env').classList.add('opening');
+  setTimeout(()=>{ document.getElementById('ltxt').style.opacity='1'; },2700);
+  setTimeout(()=>{ document.getElementById('hint').textContent=' Seni �ok seviyorum...'; },3200);
+}
+document.getElementById('env').addEventListener('touchstart',e=>{e.preventDefault();openIt();},{passive:false});
+</script>
+</body>
+</html>
+
